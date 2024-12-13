@@ -3,6 +3,7 @@ import { Box, Typography, Tabs, Tab } from "@mui/material";
 import SignUp from "./SignUp";
 import Signin from "./Signin";
 import doctor from "../doctor.png";
+
 const Auth = () => {
   const [tabValue, setTabValue] = useState(0);
 
@@ -24,7 +25,7 @@ const Auth = () => {
           flex: 1,
           background:
             "linear-gradient(to bottom right, rgb(106, 199, 241),rgba(25, 60, 173, 0.72))",
-          display: "flex",
+          display: { xs: "none", md: "flex" }, // Hide on mobile
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
@@ -69,7 +70,6 @@ const Auth = () => {
             borderRadius: "25px",
             boxShadow: 3,
             paddingTop: 1,
-            // p: 4,
           }}
         >
           <Tabs
