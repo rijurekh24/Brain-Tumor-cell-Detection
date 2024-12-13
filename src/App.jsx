@@ -1,9 +1,8 @@
 import React from "react";
-import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
-import { Button } from "@mui/material";
-import Home from "./pages/Home";
-import SignUp from "./pages/SignUp";
-import Signin from "./pages/Signin";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import Home from "./Pages/Home";
+import Signin from "./Pages/Signin";
+import SignUp from "./Pages/SignUp";
 
 function App() {
   return (
