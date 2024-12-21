@@ -39,7 +39,7 @@ const Header: React.FC = () => {
               textShadow: "1px 1px 4px rgba(0,0,0,0.6)",
             }}
           >
-            Brain Vision{" "}
+            Brain Vision
             <span
               style={{
                 color: "rgb(141, 45, 59)",
