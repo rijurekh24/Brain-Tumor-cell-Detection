@@ -1,20 +1,27 @@
-import React from 'react';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
-import { AppBar, Toolbar, Typography, Button, Container, Box } from '@mui/material';
-import { Logout } from '@mui/icons-material';
+import React from "react";
+import { Link as RouterLink, useNavigate } from "react-router-dom";
+import {
+  AppBar,
+  Toolbar,
+  Typography,
+  Button,
+  Container,
+  Box,
+} from "@mui/material";
+import { Logout } from "@mui/icons-material";
 
 const Header: React.FC = () => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    navigate('/auth');
+    navigate("/auth");
   };
 
   return (
     <AppBar
       position="static"
       sx={{
-        background:'transparent',
+        background: "transparent",
         boxShadow: 0,
       }}
     >
@@ -26,13 +33,22 @@ const Header: React.FC = () => {
             to="/"
             sx={{
               flexGrow: 1,
-              textDecoration: 'none',
-              color: 'white',
-              fontWeight: 'bold',
-              textShadow: '1px 1px 4px rgba(0,0,0,0.6)',
+              textDecoration: "none",
+              color: "white",
+              fontWeight: "bold",
+              textShadow: "1px 1px 4px rgba(0,0,0,0.6)",
             }}
           >
-            Brain Vision
+            Brain Vision{" "}
+            <span
+              style={{
+                color: "rgb(141, 45, 59)",
+                borderRadius: "50%",
+                fontSize: "40px",
+              }}
+            >
+              .
+            </span>
           </Typography>
 
           <Box>
@@ -41,13 +57,13 @@ const Header: React.FC = () => {
               component={RouterLink}
               to="/"
               sx={{
-                color: 'white',
-                fontWeight: 'bold',
-                textTransform: 'capitalize',
+                color: "white",
+                fontWeight: "bold",
+                textTransform: "capitalize",
                 fontSize: "16px",
                 mx: 1,
-                '&:hover': {
-                  backgroundColor: 'rgba(255, 255, 255, 0.2)',
+                "&:hover": {
+                  backgroundColor: "rgba(255, 255, 255, 0.2)",
                 },
               }}
             >
@@ -58,13 +74,13 @@ const Header: React.FC = () => {
               component={RouterLink}
               to="/upload"
               sx={{
-                color: 'white',
-                fontWeight: 'bold',
-                textTransform: 'capitalize',
-                fontSize:"16px",
+                color: "white",
+                fontWeight: "bold",
+                textTransform: "capitalize",
+                fontSize: "16px",
                 mx: 1,
-                '&:hover': {
-                  backgroundColor: 'rgba(255, 255, 255, 0.2)',
+                "&:hover": {
+                  backgroundColor: "rgba(255, 255, 255, 0.2)",
                 },
               }}
             >
@@ -75,14 +91,13 @@ const Header: React.FC = () => {
               onClick={handleLogout}
               startIcon={<Logout />}
               sx={{
-                color: 'white',
-                fontWeight: 'bold',
-                textTransform: 'capitalize',
+                color: "white",
+                fontWeight: "bold",
+                textTransform: "capitalize",
                 fontSize: "16px",
                 mx: 1,
-                '&:hover': {
-                  backgroundColor: 'rgba(255, 255, 255, 0.2)',
-
+                "&:hover": {
+                  backgroundColor: "rgba(255, 255, 255, 0.2)",
                 },
               }}
             >
