@@ -25,7 +25,7 @@ const Auth = () => {
           flex: 1,
           background:
             "linear-gradient(to bottom right, rgb(106, 199, 241),rgba(25, 60, 173, 0.72))",
-          display: { xs: "none", md: "flex" }, // Hide on mobile
+          display: { xs: "none", md: "flex" },
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
