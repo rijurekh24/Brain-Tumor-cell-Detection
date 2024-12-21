@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link as RouterLink } from "react-router-dom";
 import { motion } from "framer-motion";
 
@@ -29,6 +29,31 @@ import {
 const HomePage: React.FC = () => {
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
+  const fullText =
+    "Harness the power of artificial intelligence for advanced brain tumor detection. Quick, accurate, and non-invasive analysis at your fingertips.";
+
+  const [currentText, setCurrentText] = useState("");
+  const [charIndex, setCharIndex] = useState(0);
+
+  useEffect(() => {
+    const typingSpeed = 70; // Speed at which each character is typed (in ms)
+    const resetSpeed = 2000; // Delay before resetting the text (in ms)
+
+    const typeWriter = setInterval(() => {
+      if (charIndex < fullText.length) {
+        setCurrentText((prev) => prev + fullText[charIndex]);
+        setCharIndex((prev) => prev + 1);
+      } else {
+        clearInterval(typeWriter);
+        setTimeout(() => {
+          setCurrentText(""); // Clear the text after the full sentence is typed
+          setCharIndex(0); // Reset the character index to start over
+        }, resetSpeed); // Delay before starting over
+      }
+    }, typingSpeed);
+
+    return () => clearInterval(typeWriter); // Clean up interval when the component unmounts
+  }, [charIndex]);
 
   return (
     <Box
@@ -79,9 +104,7 @@ const HomePage: React.FC = () => {
                 textShadow: "1px 1px 4px rgba(0,0,0,0.4)",
               }}
             >
-              Harness the power of artificial intelligence for advanced brain
-              tumor detection. Quick, accurate, and non-invasive analysis at
-              your fingertips.
+              {currentText}
             </Typography>
             <Button
               component={RouterLink}
