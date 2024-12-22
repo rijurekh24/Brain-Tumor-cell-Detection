@@ -1,15 +1,15 @@
-import React, { useState } from 'react';
-import { 
-  Container, 
-  Typography, 
-  Button, 
-  Box, 
-  CircularProgress, 
-  Card, 
-  CardMedia, 
-  CardContent 
-} from '@mui/material';
-import { CloudUpload } from '@mui/icons-material';
+import React, { useState } from "react";
+import {
+  Container,
+  Typography,
+  Box,
+  CircularProgress,
+  Card,
+  CardMedia,
+  CardContent,
+  Button,
+} from "@mui/material";
+import { CloudUpload } from "@mui/icons-material";
 
 const UploadPage: React.FC = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -33,94 +33,231 @@ const UploadPage: React.FC = () => {
     setIsAnalyzing(true);
     await new Promise((resolve) => setTimeout(resolve, 2000));
     setIsAnalyzing(false);
-    setResults('No tumor detected. Please consult with your healthcare provider for a professional diagnosis.');
+    setResults(
+      "No tumor detected. Please consult with your healthcare provider for a professional diagnosis."
+    );
   };
 
   return (
-    <Box 
-      sx={{
-        minHeight: '100vh',
-        // background: 'linear-gradient(90deg, #000 0%, #6a11cb 100%)',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        py: 8,
-      }}
-    >
-      <Container maxWidth="md" sx={{ background: 'transparent',
-            boxShadow: 'inset 0px 10px 40px rgba(0, 0, 0, 0.3)', borderRadius: 3,  p: 4  ,textAlign: 'center',}}>
-        <Typography variant="h3" align="center" gutterBottom sx={{ fontWeight: 'bold', color: '#fff' }}>
-          Upload Brain Scan
-        </Typography>
-        <Typography variant="body1" align="center" sx={{ mb: 4, color: '#fff' }}>
-          Upload your brain MRI scan for analysis. Our AI-powered system will provide a detailed assessment.
-        </Typography>
-        <Box component="form" onSubmit={handleSubmit} sx={{ mt: 4 }}>
-          <input
-            accept="image/*"
-            style={{ display: 'none' }}
-            id="scan-upload"
-            type="file"
-            onChange={handleFileChange}
-          />
-          <label htmlFor="scan-upload">
+    <Box>
+      <Box
+        sx={{
+          minHeight: "100vh",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          py: 8,
+        }}
+      >
+        <Container
+          maxWidth="md"
+          sx={{
+            mt: 3,
+            background: "transparent",
+            borderRadius: 3,
+            p: 2,
+            textAlign: "center",
+          }}
+        >
+          <Typography
+            variant="h3"
+            align="center"
+            gutterBottom
+            sx={{ fontWeight: "bold", color: "#eee" }}
+          >
+            Upload Brain Scan
+          </Typography>
+          <Typography
+            variant="body1"
+            align="center"
+            sx={{ mb: 4, color: "#ddd", fontSize: "16px" }}
+          >
+            Upload your brain MRI scan for analysis. Our AI-powered system will
+            provide a detailed assessment.
+          </Typography>
+          <Box component="form" onSubmit={handleSubmit} sx={{ mt: 4 }}>
+            <input
+              accept="image/*"
+              style={{ display: "none" }}
+              id="scan-upload"
+              type="file"
+              onChange={handleFileChange}
+            />
+            <label htmlFor="scan-upload">
+              <Box
+                sx={{
+                  bgcolor: "transparent",
+                  color: "#fff",
+                  fontWeight: "bold",
+                  p: 4,
+                  width: "100%",
+                  height: 300,
+                  borderRadius: 3,
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  cursor: "pointer",
+                  boxShadow: "0px 4px 12px rgba(45, 23, 23, 0.39)",
+                  transition: "all 0.3s ease-in-out",
+                  "&:hover": {
+                    boxShadow: "0px 6px 16px rgba(0, 0, 0, 0.2)",
+                  },
+                }}
+              >
+                {previewUrl ? (
+                  <Card
+                    sx={{ borderRadius: 2, maxWidth: "100%", maxHeight: 250 }}
+                  >
+                    <CardMedia
+                      component="img"
+                      image={previewUrl}
+                      alt="Preview"
+                      sx={{
+                        height: "100%",
+                        objectFit: "cover",
+                        borderRadius: 2,
+                        border: "2px dotted #000",
+                      }}
+                    />
+                  </Card>
+                ) : (
+                  <>
+                    <CloudUpload sx={{ fontSize: 50, mb: 2 }} />
+                    <Typography variant="h6">
+                      Click or Drag to Upload MRI Scan
+                    </Typography>
+                  </>
+                )}
+              </Box>
+            </label>
             <Button
+              type="submit"
               variant="contained"
-              component="span"
-              startIcon={<CloudUpload />}
+              color="primary"
               fullWidth
+              // disabled={!selectedFile || isAnalyzing}
               sx={{
-                bgcolor: '#fff',
-                color: '#4A1C23',
-                fontWeight: 'bold',
+                mt: 4,
+                bgcolor: "rgb(87, 28, 35)",
                 py: 1.5,
-                width: '60%',
+                fontWeight: "bold",
+                width: "60%",
+                borderRadius: 3,
+                color: "#fff",
               }}
             >
-              Upload your brain MRI scan
+              {isAnalyzing ? (
+                <CircularProgress size={24} sx={{ color: " #fff" }} />
+              ) : (
+                "Analyze Scan"
+              )}
             </Button>
-          </label>
-          {previewUrl && (
-            <Card sx={{ mt: 4, borderRadius: 2 }}>
-              <CardMedia
-                component="img"
-                image={previewUrl}
-                alt="Preview"
-                sx={{ maxHeight: 400, objectFit: 'contain' }}
-              />
-              <CardContent>
-                <Typography variant="subtitle1" align="center" sx={{ color: 'text.secondary' }}>
-                  Preview of your uploaded scan
-                </Typography>
-              </CardContent>
-            </Card>
+          </Box>
+          {results && (
+            <Box
+              mt={4}
+              p={3}
+              borderRadius={2}
+              sx={{ bgcolor: "rgba(0, 230, 118, 0.1)", textAlign: "center" }}
+            >
+              <Typography variant="h6" gutterBottom sx={{ color: "#00c853" }}>
+                Analysis Results
+              </Typography>
+              <Typography sx={{ color: "#fff" }}>{results}</Typography>
+            </Box>
           )}
-          <Button
-            type="submit"
-            variant="contained"
-            color="primary"
-            fullWidth
-            disabled={!selectedFile || isAnalyzing}
+        </Container>
+      </Box>
+      <Box sx={{ width: "100%", textAlign: "center" }}>
+        <Typography
+          variant="h5"
+          sx={{ fontWeight: "bold", color: "#fff", mb: 4, letterSpacing: 3 }}
+        >
+          Example Brain Scans
+        </Typography>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            flexWrap: "wrap",
+            gap: 4,
+          }}
+        >
+          <Card
             sx={{
-              mt: 4,
-              bgcolor: 'rgb(44, 6, 89)',
-              py: 1.5,
-              fontWeight: 'bold',
-              width: '60%',
+              maxWidth: 300,
+              mb: 4,
+              border: "2px solid #444",
+              transition: "transform 0.3s ease, filter 0.3s ease",
+              "&:hover": {
+                transform: "scale(1.05)",
+                boxShadow: 3,
+              },
             }}
           >
-            {isAnalyzing ? <CircularProgress size={24} /> : 'Analyze Scan'}
-          </Button>
+            <CardMedia
+              component="img"
+              image="https://i.ibb.co/vsvDxrJ/3.jpg"
+              alt="Demo Scan 1"
+            />
+            <CardContent>
+              <Typography variant="body2" color="text.secondary">
+                Brain Scan Example 1
+              </Typography>
+            </CardContent>
+          </Card>
+
+          <Card
+            sx={{
+              maxWidth: 315,
+              mb: 4,
+              border: "2px solid #555",
+              transition: "transform 0.3s ease, filter 0.3s ease",
+              "&:hover": {
+                transform: "scale(1.05)",
+                boxShadow: 3,
+              },
+            }}
+          >
+            <CardMedia
+              component="img"
+              image="https://i.ibb.co/8DfVn1p/2.jpg"
+              alt="Demo Scan 2"
+            />
+            <CardContent>
+              <Typography variant="body2" color="text.secondary">
+                Brain Scan Example 2
+              </Typography>
+            </CardContent>
+          </Card>
+
+          {/* Demo Image 3 */}
+          <Card
+            sx={{
+              maxWidth: 300,
+              mb: 4,
+              border: "2px solid #666",
+              transition: "transform 0.3s ease, filter 0.3s ease",
+              "&:hover": {
+                transform: "scale(1.05)",
+                boxShadow: 3,
+              },
+            }}
+          >
+            <CardMedia
+              component="img"
+              image="https://i.ibb.co/vsvDxrJ/3.jpg"
+              alt="Demo Scan 3"
+            />
+            <CardContent>
+              <Typography variant="body2" color="text.secondary">
+                Brain Scan Example 3
+              </Typography>
+            </CardContent>
+          </Card>
         </Box>
-        {results && (
-          <Box mt={4} p={3} borderRadius={2} sx={{ bgcolor: 'rgba(0, 230, 118, 0.1)', textAlign: 'center' }}>
-            <Typography variant="h6" gutterBottom sx={{ color: '#00c853' }}>
-              Analysis Results
-            </Typography>
-            <Typography sx={{ color: 'text.secondary' }}>{results}</Typography>
-          </Box>
-        )}
-      </Container>
+      </Box>
     </Box>
   );
 };

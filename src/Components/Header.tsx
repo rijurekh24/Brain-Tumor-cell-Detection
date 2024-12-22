@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
 import {
   AppBar,
@@ -12,6 +12,24 @@ import { Logout } from "@mui/icons-material";
 
 const Header: React.FC = () => {
   const navigate = useNavigate();
+  const [scrolled, setScrolled] = useState(false);
+
+  // Update the scrolled state based on scroll position
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 50) {
+        setScrolled(true);
+      } else {
+        setScrolled(false);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
   const handleLogout = () => {
     navigate("/auth");
@@ -19,10 +37,13 @@ const Header: React.FC = () => {
 
   return (
     <AppBar
-      position="static"
+      position="fixed"
       sx={{
-        background: "transparent",
-        boxShadow: 0,
+        background: scrolled ? "rgba(0, 0, 0, 0.7)" : "transparent",
+        backdropFilter: scrolled ? "blur(5px)" : "none",
+        boxShadow: scrolled ? "0 4px 6px rgba(0, 0, 0, 0.1)" : "none",
+        width: "100%",
+        zIndex: 1000,
       }}
     >
       <Container maxWidth="lg">
