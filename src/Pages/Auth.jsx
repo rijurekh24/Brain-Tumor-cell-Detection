@@ -103,13 +103,13 @@ const Auth = () => {
             sx={{
               marginBottom: 3,
               "& .MuiTabs-indicator": {
-                backgroundColor: "#FE5F78",
-                color: "#192252",
+                backgroundColor: "black",
+                color: "#FE5F78",
               },
               "& .MuiTab-root": {
                 textTransform: "none",
                 fontWeight: "bold",
-                color: " #528CD2",
+                color: "rgb(128, 42, 55)",
               },
             }}
           >

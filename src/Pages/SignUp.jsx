@@ -38,9 +38,9 @@ const SignUp = ({ switchToSignIn }) => {
         variant="contained"
         sx={{
           marginTop: 2,
-          backgroundColor: "#528CD2",
+          backgroundColor: " #FE5F78",
           boxShadow: 0,
-          ":hover": { backgroundColor: "#528CD2", boxShadow: 0 },
+          ":hover": { backgroundColor: "rgb(164, 57, 73)", boxShadow: 0 },
         }}
       >
         Sign Up
@@ -56,7 +56,7 @@ const SignUp = ({ switchToSignIn }) => {
         <Link
           href="#"
           underline="none"
-          sx={{ color: "#528CD2", fontWeight: 600 }}
+          sx={{ color: "#FE5F78", fontWeight: 600 }}
           onClick={switchToSignIn}
         >
           Sign In
