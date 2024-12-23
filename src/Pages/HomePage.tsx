@@ -200,8 +200,8 @@ const HomePage: React.FC = () => {
           >
             <Fade in={true} timeout={1500}>
               <motion.div
-                initial={{ opacity: 0, x: 100 }}
-                animate={{ opacity: 1, x: 0 }}
+                initial={{ opacity: 0, y: 100 }}
+                animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 1 }}
               >
                 <CardMedia
@@ -212,6 +212,12 @@ const HomePage: React.FC = () => {
                     width: "100%",
                     maxWidth: 9000,
                     height: "auto",
+                    animation: "upDown 2s infinite ease-in-out",
+                    "@keyframes upDown": {
+                      "0%": { transform: "translateY(0)" },
+                      "50%": { transform: "translateY(-20px)" },
+                      "100%": { transform: "translateY(0)" },
+                    },
                   }}
                 />
               </motion.div>

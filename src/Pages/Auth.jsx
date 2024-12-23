@@ -23,40 +23,64 @@ const Auth = () => {
       <Box
         sx={{
           flex: 1,
-          background:
-            "linear-gradient(to bottom right, rgb(106, 199, 241),rgba(25, 60, 173, 0.72))",
-          display: { xs: "none", md: "flex" },
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-          color: "#fff",
         }}
       >
         <Typography
           variant="h4"
           sx={{
+            flexGrow: 1,
+            textDecoration: "none",
+            color: "white",
             fontWeight: "bold",
-            mb: 2,
-            fontFamily: "cursive",
-            letterSpacing: "px",
+            textShadow: "1px 1px 4px rgba(0,0,0,0.6)",
+            ml: 3,
+            mt: 2,
           }}
         >
-          Brain Tumor Detector
+          Brain Vision
+          <span
+            style={{
+              color: "rgb(141, 45, 59)",
+              borderRadius: "50%",
+              fontSize: "40px",
+            }}
+          >
+            .
+          </span>
         </Typography>
         <Box
-          component="img"
-          src={doctor}
           sx={{
-            width: "60%",
-            borderRadius: "16px",
+            flex: 1,
+            // background:
+            //   "linear-gradient(to bottom right, rgb(106, 199, 241),rgba(25, 60, 173, 0.72))",
+            display: { xs: "none", md: "flex" },
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            color: "#fff",
           }}
-        />
+        >
+          <Box
+            component="img"
+            src="https://i.postimg.cc/C5QKGjSz/Cancer-brain-tumor-treatment-GBM-removebg-preview.png"
+            sx={{
+              width: "100%",
+              mt: 3,
+              borderRadius: "16px",
+              animation: "upDown 2s infinite ease-in-out",
+              "@keyframes upDown": {
+                "0%": { transform: "translateY(0)" },
+                "50%": { transform: "translateY(-20px)" },
+                "100%": { transform: "translateY(0)" },
+              },
+            }}
+          />
+        </Box>
       </Box>
 
       <Box
         sx={{
           flex: 1,
-          backgroundColor: "#f4f4f4",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
