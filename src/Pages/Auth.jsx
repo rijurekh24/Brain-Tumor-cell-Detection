@@ -104,7 +104,7 @@ const Auth = () => {
               marginBottom: 3,
               "& .MuiTabs-indicator": {
                 backgroundColor: "black",
-                color: "#FE5F78",
+                color: "rgb(128, 42, 55)",
               },
               "& .MuiTab-root": {
                 textTransform: "none",
