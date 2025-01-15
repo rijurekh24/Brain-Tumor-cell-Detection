@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Container,
   Typography,
@@ -10,6 +10,7 @@ import {
   Button,
 } from "@mui/material";
 import { CloudUpload } from "@mui/icons-material";
+import axios from "axios";
 
 const UploadPage: React.FC = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -31,11 +32,28 @@ const UploadPage: React.FC = () => {
     if (!selectedFile) return;
 
     setIsAnalyzing(true);
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-    setIsAnalyzing(false);
-    setResults(
-      "No tumor detected. Please consult with your healthcare provider for a professional diagnosis."
-    );
+
+    const formData = new FormData();
+    formData.append("image", selectedFile);
+
+    try {
+      const response = await axios.post(
+        "http://localhost:4000/predict",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      setResults(response.data);
+    } catch (error) {
+      console.error("Error during prediction:", error);
+      setResults("An error occurred while processing the image.");
+    } finally {
+      setIsAnalyzing(false);
+    }
   };
 
   return (
@@ -136,7 +154,7 @@ const UploadPage: React.FC = () => {
               variant="contained"
               color="primary"
               fullWidth
-              // disabled={!selectedFile || isAnalyzing}
+              disabled={!selectedFile || isAnalyzing}
               sx={{
                 mt: 4,
                 bgcolor: "rgb(87, 28, 35)",
