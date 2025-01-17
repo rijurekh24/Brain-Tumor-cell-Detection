@@ -47,6 +47,7 @@ const UploadPage: React.FC = () => {
         }
       );
 
+      console.log(response.data);
       setResults(response.data);
     } catch (error) {
       console.error("Error during prediction:", error);
@@ -177,14 +178,141 @@ const UploadPage: React.FC = () => {
               mt={4}
               p={3}
               borderRadius={2}
-              sx={{ bgcolor: "rgba(0, 230, 118, 0.1)", textAlign: "center" }}
+              // sx={{ bgcolor: "rgba(0, 230, 118, 0.1)", textAlign: "center" }}
             >
-              <Typography variant="h6" gutterBottom sx={{ color: "#00c853" }}>
+              <Typography variant="h5" gutterBottom sx={{ color: "#00c853" }}>
                 Analysis Results
               </Typography>
-              <Typography sx={{ color: "#fff" }} fontSize={"2rem"}>
+              <Typography sx={{ color: "#fff" }} fontSize={"3rem"}>
                 {results["tumor type"]}
               </Typography>
+
+              {results && (
+                <Box
+                  mt={4}
+                  p={3}
+                  borderRadius={2}
+                  sx={{
+                    bgcolor:
+                      results["tumor type"] === "No Tumor"
+                        ? "#388e3c"
+                        : results["tumor type"] === "Glioma"
+                        ? "#d32f2f"
+                        : results["tumor type"] === "Meningioma"
+                        ? "#f57c00"
+                        : "rgba(255, 136, 0, 0.82)",
+                    textAlign: "left",
+                  }}
+                >
+                  {/* Details for Glioma */}
+                  {results["tumor type"] === "Glioma" && (
+                    <Box sx={{ mt: 2, padding: 2 }}>
+                      <Typography
+                        variant="body1"
+                        sx={{ color: "#fff", fontWeight: "bold", mb: 1 }}
+                      >
+                        Description: A tumor originating from glial cells in the
+                        brain or spinal cord.
+                      </Typography>
+                      <Typography
+                        variant="body1"
+                        sx={{ color: "#fff", fontWeight: "bold", mb: 1 }}
+                      >
+                        Urgency: Immediate checkup required.
+                      </Typography>
+                      <Typography
+                        variant="body1"
+                        sx={{ color: "#fff", fontWeight: "bold" }}
+                      >
+                        Danger Level: High; can range from low-grade to
+                        aggressive (e.g., glioblastoma).
+                      </Typography>
+                    </Box>
+                  )}
+
+                  {/* Details for Meningioma */}
+                  {results["tumor type"] === "Melignoma" && (
+                    <Box sx={{ mt: 2, padding: 2 }}>
+                      <Typography
+                        variant="body1"
+                        sx={{ color: "#fff", fontWeight: "bold", mb: 1 }}
+                      >
+                        Description: A usually benign tumor arising from the
+                        meninges, the protective layers of the brain and spinal
+                        cord.
+                      </Typography>
+                      <Typography
+                        variant="body1"
+                        sx={{ color: "#fff", fontWeight: "bold", mb: 1 }}
+                      >
+                        Urgency: Moderate; urgent if symptoms like severe
+                        headaches or vision issues occur.
+                      </Typography>
+                      <Typography
+                        variant="body1"
+                        sx={{ color: "#fff", fontWeight: "bold" }}
+                      >
+                        Danger Level: Low to moderate; rarely life-threatening
+                        but may cause complications.
+                      </Typography>
+                    </Box>
+                  )}
+
+                  {/* Details for Pituitary Tumor */}
+                  {results["tumor type"] === "Pituitary" && (
+                    <Box sx={{ mt: 2, padding: 2 }}>
+                      <Typography
+                        variant="body1"
+                        sx={{ color: "#fff", fontWeight: "bold", mb: 1 }}
+                      >
+                        Description: A mostly benign tumor affecting the
+                        pituitary gland, impacting hormone production and bodily
+                        functions.
+                      </Typography>
+                      <Typography
+                        variant="body1"
+                        sx={{ color: "#fff", fontWeight: "bold", mb: 1 }}
+                      >
+                        Urgency: Moderate; urgent if hormonal imbalances or
+                        vision loss are severe.
+                      </Typography>
+                      <Typography
+                        variant="body1"
+                        sx={{ color: "#fff", fontWeight: "bold" }}
+                      >
+                        Danger Level: Low to moderate; rarely fatal but may
+                        cause significant health issues if untreated.
+                      </Typography>
+                    </Box>
+                  )}
+
+                  {/* Details for No Tumor */}
+                  {results["tumor type"] === "No Tumor" && (
+                    <Box sx={{ mt: 2, padding: 2 }}>
+                      <Typography
+                        variant="body1"
+                        sx={{ color: "#fff", fontWeight: "bold", mb: 1 }}
+                      >
+                        Description: The absence of any abnormal growth or tumor
+                        in the brain.
+                      </Typography>
+                      <Typography
+                        variant="body1"
+                        sx={{ color: "#fff", fontWeight: "bold", mb: 1 }}
+                      >
+                        Urgency: None; regular health checkups advised.
+                      </Typography>
+                      <Typography
+                        variant="body1"
+                        sx={{ color: "#fff", fontWeight: "bold" }}
+                      >
+                        Danger Level: None; this signifies a healthy brain, and
+                        no immediate medical action is required.
+                      </Typography>
+                    </Box>
+                  )}
+                </Box>
+              )}
             </Box>
           )}
         </Container>
