@@ -27,7 +27,6 @@ const theme = createTheme({
 function Layout({ children }) {
   const location = useLocation();
 
-  // Hide Header and Footer for /auth route
   const isAuthPage = location.pathname === "/auth";
 
   return (

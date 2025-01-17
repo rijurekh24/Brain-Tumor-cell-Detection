@@ -38,7 +38,7 @@ const UploadPage: React.FC = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:4000/predict",
+        "https://bt.arnabchatterjee.site/upload-image/",
         formData,
         {
           headers: {
@@ -182,7 +182,9 @@ const UploadPage: React.FC = () => {
               <Typography variant="h6" gutterBottom sx={{ color: "#00c853" }}>
                 Analysis Results
               </Typography>
-              <Typography sx={{ color: "#fff" }}>{results}</Typography>
+              <Typography sx={{ color: "#fff" }} fontSize={"2rem"}>
+                {results["tumor type"]}
+              </Typography>
             </Box>
           )}
         </Container>
