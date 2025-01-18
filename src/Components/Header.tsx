@@ -43,6 +43,8 @@ const Header: React.FC = () => {
   const handleLogout = async () => {
     try {
       await account.deleteSession("current");
+      localStorage.clear();
+      sessionStorage.clear();
       navigate("/auth");
     } catch (error) {
       console.error("Error during logout:", error);
