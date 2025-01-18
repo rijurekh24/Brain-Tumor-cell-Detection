@@ -135,7 +135,7 @@ const Header: React.FC = () => {
               Upload Scan
             </Button>
 
-            {isAuthenticated && user ? (
+            {user ? (
               <Box display="flex" alignItems="center">
                 <Avatar
                   sx={{
