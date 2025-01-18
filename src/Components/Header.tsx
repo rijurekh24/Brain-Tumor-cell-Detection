@@ -43,8 +43,7 @@ const Header: React.FC = () => {
   const handleLogout = async () => {
     try {
       await account.deleteSession("current");
-      localStorage.clear();
-      sessionStorage.clear();
+
       setUser(null);
       navigate("/auth");
     } catch (error) {
