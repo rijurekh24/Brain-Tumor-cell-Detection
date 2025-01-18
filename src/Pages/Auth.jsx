@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { Box, Typography, Tabs, Tab } from "@mui/material";
 import SignUp from "./SignUp";
 import Signin from "./Signin";
-import doctor from "../doctor.png";
 
 const Auth = () => {
   const [tabValue, setTabValue] = useState(0);
@@ -93,7 +92,6 @@ const Auth = () => {
             backgroundColor: "#eee",
             borderRadius: "25px",
             boxShadow: 3,
-            paddingTop: 1,
           }}
         >
           <Tabs
@@ -103,13 +101,19 @@ const Auth = () => {
             sx={{
               marginBottom: 3,
               "& .MuiTabs-indicator": {
-                backgroundColor: "black",
-                color: "rgb(128, 42, 55)",
+                backgroundColor: "rgb(128, 42, 55)",
               },
               "& .MuiTab-root": {
                 textTransform: "none",
                 fontWeight: "bold",
+                color: "gray",
+                borderTopRightRadius: "25px",
+                borderTopLeftRadius: "25px",
+              },
+              "& .MuiTab-root.Mui-selected": {
                 color: "rgb(128, 42, 55)",
+                borderTopRightRadius: "25px",
+                borderTopLeftRadius: "25px",
               },
             }}
           >
