@@ -27,8 +27,6 @@ const Signin = ({ switchToSignUp }) => {
       const session = await account.createEmailPasswordSession(email, password);
       console.log("User signed in:", session);
 
-      console.log("Session:", session);
-
       navigate("/");
     } catch (err) {
       console.error("Error during sign-in:", err);

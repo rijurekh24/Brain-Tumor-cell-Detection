@@ -22,7 +22,7 @@ const Header: React.FC = () => {
   const [anchorEl, setAnchorEl] = useState(null); // State to control the Popover
 
   // Get user information from context
-  const { user, isAuthenticated } = useAuth();
+  const { user, isAuthenticated, setUser } = useAuth();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -45,6 +45,7 @@ const Header: React.FC = () => {
       await account.deleteSession("current");
       localStorage.clear();
       sessionStorage.clear();
+      setUser(null);
       navigate("/auth");
     } catch (error) {
       console.error("Error during logout:", error);
