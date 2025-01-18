@@ -17,6 +17,7 @@ export const AuthProvider = ({ children }) => {
     const checkAuth = async () => {
       try {
         const currentUser = await account.get();
+        console.log("Current user:", currentUser);
         setIsAuthenticated(true);
         setUser(currentUser);
       } catch (err) {
