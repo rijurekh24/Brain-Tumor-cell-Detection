@@ -25,7 +25,7 @@ const Signin = ({ switchToSignUp }) => {
 
     try {
       const session = await account.createEmailPasswordSession(email, password);
-      console.log("User signed in:", session);
+      // console.log("User signed in:", session);
 
       console.log("Session:", session);
 

@@ -24,7 +24,7 @@ const SignUp = ({ switchToSignIn }) => {
 
     try {
       const user = await account.create(ID.unique(), email, password, fullName);
-      console.log(user);
+      // console.log(user);
       switchToSignIn();
     } catch (err) {
       setError(err.message || "Something went wrong. Please try again.");
