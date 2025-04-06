@@ -61,7 +61,7 @@ const ChatBot = ({ onClose }: { onClose: () => void }) => {
       elevation={8}
       sx={{
         position: "fixed",
-        bottom: 80,
+        bottom: 20,
         right: 20,
         width: 360,
         height: 480,
