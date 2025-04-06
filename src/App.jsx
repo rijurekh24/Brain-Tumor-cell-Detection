@@ -1,10 +1,11 @@
 import React from "react";
 import {
   BrowserRouter as Router,
-  Route,
   Routes,
+  Route,
   useLocation,
 } from "react-router-dom";
+import { AuthProvider } from "./context/AuthContext";
 import HomePage from "./Pages/HomePage";
 import NotFound from "./Pages/NotFound";
 import Auth from "./Pages/Auth";
@@ -12,6 +13,7 @@ import UploadPage from "./Pages/UploadPage";
 import { createTheme, CssBaseline, ThemeProvider } from "@mui/material";
 import Header from "./Components/Header";
 import Footer from "./Components/Footer";
+import ProtectedRoute from "./Components/ProtectedRoute";
 
 const theme = createTheme({
   palette: {
@@ -26,9 +28,7 @@ const theme = createTheme({
 
 function Layout({ children }) {
   const location = useLocation();
-
-  // Hide Header and Footer for /auth route
-  const isAuthPage = location.pathname === "/auth";
+  const hideHeaderFooter = location.pathname === "/auth";
 
   return (
     <div
@@ -39,28 +39,45 @@ function Layout({ children }) {
         background: "linear-gradient(130deg, #000 40%, #FE5F78 100%)",
       }}
     >
-      {!isAuthPage && <Header />}
+      {!hideHeaderFooter && <Header />}
       <main style={{ flexGrow: 1 }}>{children}</main>
-      {!isAuthPage && <Footer />}
+      {!hideHeaderFooter && <Footer />}
     </div>
   );
 }
 
 function App() {
   return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <Router>
-        <Layout>
-          <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/upload" element={<UploadPage />} />
-            <Route path="/auth" element={<Auth />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </Layout>
-      </Router>
-    </ThemeProvider>
+    <AuthProvider>
+      {" "}
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <Router>
+          <Layout>
+            <Routes>
+              <Route
+                path="/"
+                element={
+                  <ProtectedRoute>
+                    <HomePage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/upload"
+                element={
+                  <ProtectedRoute>
+                    <UploadPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route path="/auth" element={<Auth />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </Layout>
+        </Router>
+      </ThemeProvider>
+    </AuthProvider>
   );
 }
 

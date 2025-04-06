@@ -7,14 +7,23 @@ import {
   Button,
   Container,
   Box,
+  Avatar,
+  Popover,
+  MenuItem,
+  ListItemText,
 } from "@mui/material";
 import { Logout } from "@mui/icons-material";
+import { useAuth } from "../context/AuthContext"; // Assuming you're using useAuth to get user details
+import { account } from "../appwrite";
 
 const Header: React.FC = () => {
   const navigate = useNavigate();
   const [scrolled, setScrolled] = useState(false);
+  const [anchorEl, setAnchorEl] = useState(null); // State to control the Popover
 
-  // Update the scrolled state based on scroll position
+  // Get user information from context
+  const { user, isAuthenticated, setUser } = useAuth();
+
   useEffect(() => {
     const handleScroll = () => {
       if (window.scrollY > 50) {
@@ -31,9 +40,27 @@ const Header: React.FC = () => {
     };
   }, []);
 
-  const handleLogout = () => {
-    navigate("/auth");
+  const handleLogout = async () => {
+    try {
+      await account.deleteSession("current");
+
+      setUser(null);
+      navigate("/auth");
+    } catch (error) {
+      console.error("Error during logout:", error);
+    }
   };
+
+  const handleProfileClick = (event) => {
+    setAnchorEl(event.currentTarget); // Open Popover on profile click
+  };
+
+  const handleCloseProfile = () => {
+    setAnchorEl(null); // Close Popover
+  };
+
+  const open = Boolean(anchorEl); // Determines if the Popover is open
+  const id = open ? "profile-popover" : undefined; // Popover id
 
   return (
     <AppBar
@@ -72,7 +99,7 @@ const Header: React.FC = () => {
             </span>
           </Typography>
 
-          <Box>
+          <Box sx={{ display: "flex" }}>
             <Button
               color="inherit"
               component={RouterLink}
@@ -107,23 +134,89 @@ const Header: React.FC = () => {
             >
               Upload Scan
             </Button>
-            <Button
-              color="inherit"
-              onClick={handleLogout}
-              startIcon={<Logout />}
-              sx={{
-                color: "white",
-                fontWeight: "bold",
-                textTransform: "capitalize",
-                fontSize: "16px",
-                mx: 1,
-                "&:hover": {
-                  backgroundColor: "rgba(255, 255, 255, 0.2)",
-                },
-              }}
-            >
-              Logout
-            </Button>
+
+            {isAuthenticated && user ? (
+              <Box display="flex" alignItems="center">
+                <Avatar
+                  sx={{
+                    width: 30,
+                    height: 30,
+                    backgroundColor: "#FE5F78",
+                    marginRight: 1,
+                    cursor: "pointer", // Makes it clickable
+                  }}
+                  onClick={handleProfileClick} // Opens the profile popover
+                >
+                  {user.name?.charAt(0).toUpperCase()}
+                </Avatar>
+
+                <Typography
+                  variant="h6"
+                  sx={{
+                    color: "white",
+                    fontWeight: "bold",
+                    marginRight: 2,
+                    textTransform: "capitalize",
+                    cursor: "pointer", // Makes it clickable
+                  }}
+                  onClick={handleProfileClick} // Opens the profile popover
+                >
+                  {user.name || "User"}
+                </Typography>
+
+                {/* Profile Popover */}
+                <Popover
+                  id={id}
+                  open={open}
+                  anchorEl={anchorEl}
+                  onClose={handleCloseProfile}
+                  anchorOrigin={{
+                    vertical: "bottom",
+                    horizontal: "center",
+                  }}
+                  transformOrigin={{
+                    vertical: "top",
+                    horizontal: "center",
+                  }}
+                  sx={{
+                    "& .MuiPopover-paper": {
+                      backdropFilter: "blur(10px)",
+                      backgroundColor: "rgba(255, 255, 255, 0.1)", // Slight transparent background for popover
+                      color: "white",
+                      boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)", // Optional shadow for the popover
+                      mt: 1,
+                      px: 2,
+                    },
+                  }}
+                >
+                  <Box>
+                    <MenuItem onClick={handleLogout}>
+                      <ListItemText primary="Logout" />
+                    </MenuItem>
+                  </Box>
+                </Popover>
+              </Box>
+            ) : (
+              <Box>
+                <Button
+                  color="inherit"
+                  component={RouterLink}
+                  to="/auth"
+                  sx={{
+                    color: "white",
+                    fontWeight: "bold",
+                    textTransform: "capitalize",
+                    fontSize: "16px",
+                    mx: 1,
+                    "&:hover": {
+                      backgroundColor: "rgba(255, 255, 255, 0.2)",
+                    },
+                  }}
+                >
+                  Login
+                </Button>
+              </Box>
+            )}
           </Box>
         </Toolbar>
       </Container>
