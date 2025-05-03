@@ -4,56 +4,80 @@ import {
   TextField,
   IconButton,
   Typography,
-  CircularProgress,
   Paper,
   Divider,
   Avatar,
+  Button,
 } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
 import CloseIcon from "@mui/icons-material/Close";
 import PersonIcon from "@mui/icons-material/Person";
 import SmartToyIcon from "@mui/icons-material/SmartToy";
-import axios from "axios";
 
 const ChatBot = ({ onClose }: { onClose: () => void }) => {
   const [messages, setMessages] = useState<{ from: string; text: string }[]>(
     []
   );
   const [input, setInput] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [stage, setStage] = useState<
+    "init" | "askCity" | "done" | "noResponse"
+  >("init");
+  const [city, setCity] = useState("");
   const bottomRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages, loading]);
+  }, [messages]);
 
-  const sendMessage = async () => {
-    if (!input.trim()) return;
+  useEffect(() => {
+    // Initial bot message
+    setMessages([
+      { from: "bot", text: "Want nearby locations of Neurosurgeons?" },
+    ]);
+  }, []);
 
-    setMessages((prev) => [...prev, { from: "user", text: input }]);
-    setInput("");
-    setLoading(true);
+  const handleYes = () => {
+    setMessages((prev) => [...prev, { from: "user", text: "Yes" }]);
+    setMessages((prev) => [
+      ...prev,
+      { from: "bot", text: "Please enter your city." },
+    ]);
+    setStage("askCity");
+  };
 
-    try {
-      const res = await axios.post(
-        "https://deploynewchatbot.onrender.com/ask",
-        {
-          query: input,
-        }
-      );
+  const handleNo = () => {
+    setMessages((prev) => [
+      ...prev,
+      { from: "user", text: "No" },
+      { from: "bot", text: "Okay, let me know if you change your mind." },
+    ]);
+    setStage("noResponse");
+  };
 
-      setMessages((prev) => [
-        ...prev,
-        { from: "bot", text: res.data.response },
-      ]);
-    } catch {
-      setMessages((prev) => [
-        ...prev,
-        { from: "bot", text: "Something went wrong. Try again." },
-      ]);
-    } finally {
-      setLoading(false);
-    }
+  const handleCitySubmit = () => {
+    if (!city.trim()) return;
+    setMessages((prev) => [...prev, { from: "user", text: city }]);
+    const link = `https://www.practo.com/search/doctors?results_type=doctor&q=%5B%7B%22word%22%3A%22neurosurgeon%22%2C%22autocompleted%22%3Atrue%2C%22category%22%3A%22subspeciality%22%7D%5D&city=${encodeURIComponent(
+      city
+    )}`;
+    setMessages((prev) => [
+      ...prev,
+      {
+        from: "bot",
+        text: `Here is a link to nearby neurosurgeons: `,
+      },
+      {
+        from: "bot",
+        text: `<a href="${link}" target="_blank" rel="noopener noreferrer">Go to see nearby Neurosurgeons </a>`,
+      },
+    ]);
+    setStage("done");
+  };
+
+  const restartChat = () => {
+    setCity("");
+    setStage("init");
+    setMessages([{ from: "bot", text: "Want nearby locations?" }]);
   };
 
   return (
@@ -101,12 +125,6 @@ const ChatBot = ({ onClose }: { onClose: () => void }) => {
           overflowY: "auto",
         }}
       >
-        {messages.length === 0 && !loading && (
-          <Typography variant="body2" color="textSecondary" align="center">
-            Start a conversation with the bot!
-          </Typography>
-        )}
-
         {messages.map((msg, i) => (
           <Box
             key={i}
@@ -120,18 +138,32 @@ const ChatBot = ({ onClose }: { onClose: () => void }) => {
                 <SmartToyIcon fontSize="small" />
               </Avatar>
             )}
-
-            <Box
-              sx={{
-                px: 2,
-                py: 1,
-                borderRadius: 2,
-                bgcolor: msg.from === "user" ? "#d1e7dd" : "#e3f2fd",
-                maxWidth: "75%",
-              }}
-            >
-              <Typography variant="body2">{msg.text}</Typography>
-            </Box>
+            {msg.text.includes("<a") ? (
+              <Box
+                sx={{
+                  px: 2,
+                  py: 1,
+                  borderRadius: 2,
+                  bgcolor: msg.from === "user" ? "#d1e7dd" : "#e3f2fd",
+                  maxWidth: "75%",
+                  wordBreak: "break-word",
+                }}
+                dangerouslySetInnerHTML={{ __html: msg.text }}
+              />
+            ) : (
+              <Box
+                sx={{
+                  px: 2,
+                  py: 1,
+                  borderRadius: 2,
+                  bgcolor: msg.from === "user" ? "#d1e7dd" : "#e3f2fd",
+                  maxWidth: "75%",
+                  wordBreak: "break-word",
+                }}
+              >
+                <Typography variant="body2">{msg.text}</Typography>
+              </Box>
+            )}
 
             {msg.from === "user" && (
               <Avatar sx={{ bgcolor: "#a5d6a7", ml: 1, width: 30, height: 30 }}>
@@ -141,115 +173,69 @@ const ChatBot = ({ onClose }: { onClose: () => void }) => {
           </Box>
         ))}
 
-        {/* Typing animation */}
-        {loading && (
-          <Box display="flex" alignItems="center" mb={1}>
-            <Avatar sx={{ bgcolor: "#90caf9", mr: 1, width: 30, height: 30 }}>
-              <SmartToyIcon fontSize="small" />
-            </Avatar>
-            <Box
-              sx={{
-                background: "#e3f2fd",
-                px: 2,
-                py: 1,
-                borderRadius: 2,
-                display: "inline-flex",
+        {/* Buttons */}
+        {stage === "init" && (
+          <Box display="flex" justifyContent="center" gap={2} mt={1}>
+            <Button onClick={handleYes} variant="contained" size="small">
+              Yes
+            </Button>
+            <Button onClick={handleNo} variant="outlined" size="small">
+              No
+            </Button>
+          </Box>
+        )}
+
+        {stage === "askCity" && (
+          <Box display="flex" gap={1} mt={1} px={1}>
+            <TextField
+              variant="outlined"
+              placeholder="Enter your city (e.g., Kolkata, Delhi)"
+              value={city}
+              onChange={(e) => setCity(e.target.value)}
+              fullWidth
+              InputProps={{
+                sx: {
+                  borderRadius: "25px",
+                  bgcolor: "#fff",
+                  p: 0,
+                  boxShadow: 1,
+                  "& .MuiOutlinedInput-notchedOutline": {
+                    borderColor: "rgb(66, 36, 41)",
+                  },
+                  "&:hover .MuiOutlinedInput-notchedOutline": {
+                    borderColor: "rgb(100, 8, 22)",
+                  },
+                  "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                    borderColor: "rgb(100, 8, 22)",
+                    borderWidth: 2,
+                  },
+                },
               }}
+            />
+
+            <Button onClick={handleCitySubmit} variant="contained">
+              Submit
+            </Button>
+          </Box>
+        )}
+
+        {stage === "noResponse" && (
+          <Box display="flex" justifyContent="center" mt={2}>
+            <Button
+              onClick={restartChat}
+              variant="contained"
+              color="primary"
+              size="small"
             >
-              <Box className="typing">
-                <span></span>
-                <span></span>
-                <span></span>
-              </Box>
-            </Box>
+              Start Chat Again
+            </Button>
           </Box>
         )}
 
         <div ref={bottomRef} />
       </Box>
 
-      {/* Input Area */}
       <Divider />
-      <Box
-        sx={{
-          width: "100%",
-          bgcolor: "#f5f5f5",
-          // px: 1,
-          // py: 1.5,
-        }}
-      >
-        <TextField
-          fullWidth
-          variant="outlined"
-          placeholder="Type your message..."
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          onKeyDown={(e) => e.key === "Enter" && sendMessage()}
-          InputProps={{
-            sx: {
-              borderRadius: 0,
-              outline: "none",
-              bgcolor: "rgb(66, 36, 41)",
-              color: "#fff",
-              pr: 2,
-              pl: 1,
-              "& .MuiOutlinedInput-notchedOutline": {
-                border: "none",
-              },
-              "&:hover .MuiOutlinedInput-notchedOutline": {
-                border: "none",
-              },
-              "&:focus .MuiOutlinedInput-notchedOutline": {
-                border: "none",
-              },
-            },
-            endAdornment: (
-              <IconButton
-                onClick={sendMessage}
-                disabled={loading || !input.trim()}
-                edge="end"
-                sx={{
-                  color: "#fff",
-                  "&:hover": { color: "rgb(100, 8, 22)" },
-                }}
-              >
-                <SendIcon />
-              </IconButton>
-            ),
-          }}
-        />
-      </Box>
-
-      {/* Typing animation CSS */}
-      <style>
-        {`
-          .typing {
-            display: flex;
-            gap: 4px;
-          }
-          .typing span {
-            width: 6px;
-            height: 6px;
-            background-color: #555;
-            border-radius: 50%;
-            animation: blink 1.2s infinite ease-in-out both;
-          }
-          .typing span:nth-of-type(2) {
-            animation-delay: 0.2s;
-          }
-          .typing span:nth-of-type(3) {
-            animation-delay: 0.4s;
-          }
-          @keyframes blink {
-            0%, 80%, 100% {
-              opacity: 0;
-            }
-            40% {
-              opacity: 1;
-            }
-          }
-        `}
-      </style>
     </Paper>
   );
 };

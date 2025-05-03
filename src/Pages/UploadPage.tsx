@@ -184,7 +184,7 @@ const UploadPage: React.FC = () => {
                       ? "#388e3c"
                       : results["tumor type"] === "Glioma"
                       ? "#d32f2f"
-                      : results["tumor type"] === "Meningioma"
+                      : results["tumor type"] === "Melignoma"
                       ? "#f57c00"
                       : results["tumor type"] === "Pituitary"
                       ? "#ffa000"
@@ -205,7 +205,7 @@ const UploadPage: React.FC = () => {
                     </Typography>
                   </>
                 )}
-                {results["tumor type"] === "Meningioma" && (
+                {results["tumor type"] === "Melignoma" && (
                   <>
                     <Typography color="#fff" fontWeight="bold">
                       Description: Usually benign tumor from meninges.
