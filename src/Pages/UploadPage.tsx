@@ -54,17 +54,25 @@ const UploadPage: React.FC = () => {
       );
       setResults(response.data);
 
-      const tumorType = response.data["tumor type"];
-      if (tumorType && tumorType !== "No Tumor") {
+      const tumorType = response.data["tumor type"]?.tumor_prediction;
+      const classification = response.data["tumor type"]?.classification;
+
+      if (
+        tumorType &&
+        tumorType !== "No Tumor" &&
+        classification !== "non_brain"
+      ) {
         setAutoPrompt(true);
       }
     } catch (error) {
       console.error("Error during prediction:", error);
-      setResults({ "tumor type": "Error processing image" });
     } finally {
       setIsAnalyzing(false);
     }
   };
+
+  const tumorType = results?.["tumor type"]?.tumor_prediction;
+  const classification = results?.["tumor type"]?.classification;
 
   return (
     <Box>
@@ -165,104 +173,126 @@ const UploadPage: React.FC = () => {
             </Button>
           </Box>
 
+          {/* === Analysis Result Section === */}
           {results && (
-            <Box mt={4} p={3}>
-              <Typography variant="h5" gutterBottom sx={{ color: "#00c853" }}>
-                Analysis Results
-              </Typography>
-              <Typography sx={{ color: "#fff" }} fontSize={"2rem"}>
-                {results["tumor type"]}
-              </Typography>
-
-              <Box
-                mt={4}
-                p={3}
-                borderRadius={2}
-                sx={{
-                  bgcolor:
-                    results["tumor type"] === "No Tumor"
-                      ? "#388e3c"
-                      : results["tumor type"] === "Glioma"
-                      ? "#d32f2f"
-                      : results["tumor type"] === "Melignoma"
-                      ? "#f57c00"
-                      : results["tumor type"] === "Pituitary"
-                      ? "#ffa000"
-                      : "#616161",
-                  textAlign: "left",
-                }}
-              >
-                {results["tumor type"] === "Glioma" && (
-                  <>
-                    <Typography color="#fff" fontWeight="bold">
-                      Description: A tumor originating from glial cells.
-                    </Typography>
-                    <Typography color="#fff" fontWeight="bold">
-                      Urgency: Immediate checkup required.
-                    </Typography>
-                    <Typography color="#fff" fontWeight="bold">
-                      Danger Level: High.
-                    </Typography>
-                  </>
-                )}
-                {results["tumor type"] === "Melignoma" && (
-                  <>
-                    <Typography color="#fff" fontWeight="bold">
-                      Description: Usually benign tumor from meninges.
-                    </Typography>
-                    <Typography color="#fff" fontWeight="bold">
-                      Urgency: Moderate.
-                    </Typography>
-                    <Typography color="#fff" fontWeight="bold">
-                      Danger Level: Low to Moderate.
-                    </Typography>
-                  </>
-                )}
-                {results["tumor type"] === "Pituitary" && (
-                  <>
-                    <Typography color="#fff" fontWeight="bold">
-                      Description: Affects hormone production.
-                    </Typography>
-                    <Typography color="#fff" fontWeight="bold">
-                      Urgency: Moderate.
-                    </Typography>
-                    <Typography color="#fff" fontWeight="bold">
-                      Danger Level: Low to Moderate.
-                    </Typography>
-                  </>
-                )}
-                {results["tumor type"] === "No Tumor" && (
-                  <>
-                    <Typography color="#fff" fontWeight="bold">
-                      Description: No abnormal growth detected.
-                    </Typography>
-                    <Typography color="#fff" fontWeight="bold">
-                      Urgency: None.
-                    </Typography>
-                    <Typography color="#fff" fontWeight="bold">
-                      Danger Level: None.
-                    </Typography>
-                  </>
-                )}
-              </Box>
-
-              {autoPrompt && (
-                <Box textAlign="center" mt={3}>
-                  <Button
-                    variant="outlined"
-                    onClick={() => setChatOpen(true)}
-                    sx={{ color: "#fff", borderColor: "#fff" }}
+            <>
+              {classification === "non_brain" ? (
+                <Box mt={4} p={3}>
+                  <Typography
+                    variant="h5"
+                    gutterBottom
+                    sx={{ color: "#f44336" }}
                   >
-                    Want to know more about this tumor?
-                  </Button>
+                    Invalid Image
+                  </Typography>
+                  <Typography sx={{ color: "#fff", fontSize: "1.2rem" }}>
+                    The uploaded image is not a valid brain MRI scan.
+                  </Typography>
+                </Box>
+              ) : (
+                <Box mt={4} p={3}>
+                  <Typography
+                    variant="h5"
+                    gutterBottom
+                    sx={{ color: "#00c853" }}
+                  >
+                    Analysis Results
+                  </Typography>
+                  <Typography sx={{ color: "#fff" }} fontSize={"2rem"}>
+                    {tumorType}
+                  </Typography>
+
+                  <Box
+                    mt={4}
+                    p={3}
+                    borderRadius={2}
+                    sx={{
+                      bgcolor:
+                        tumorType === "No Tumor"
+                          ? "#388e3c"
+                          : tumorType === "Glioma"
+                          ? "#d32f2f"
+                          : tumorType === "Melignoma"
+                          ? "#f57c00"
+                          : tumorType === "Pituitary"
+                          ? "#ffa000"
+                          : "#616161",
+                      textAlign: "left",
+                    }}
+                  >
+                    {tumorType === "Glioma" && (
+                      <>
+                        <Typography color="#fff" fontWeight="bold">
+                          Description: A tumor originating from glial cells.
+                        </Typography>
+                        <Typography color="#fff" fontWeight="bold">
+                          Urgency: Immediate checkup required.
+                        </Typography>
+                        <Typography color="#fff" fontWeight="bold">
+                          Danger Level: High.
+                        </Typography>
+                      </>
+                    )}
+                    {tumorType === "Melignoma" && (
+                      <>
+                        <Typography color="#fff" fontWeight="bold">
+                          Description: Usually benign tumor from meninges.
+                        </Typography>
+                        <Typography color="#fff" fontWeight="bold">
+                          Urgency: Moderate.
+                        </Typography>
+                        <Typography color="#fff" fontWeight="bold">
+                          Danger Level: Low to Moderate.
+                        </Typography>
+                      </>
+                    )}
+                    {tumorType === "Pituitary" && (
+                      <>
+                        <Typography color="#fff" fontWeight="bold">
+                          Description: Affects hormone production.
+                        </Typography>
+                        <Typography color="#fff" fontWeight="bold">
+                          Urgency: Moderate.
+                        </Typography>
+                        <Typography color="#fff" fontWeight="bold">
+                          Danger Level: Low to Moderate.
+                        </Typography>
+                      </>
+                    )}
+                    {tumorType === "No Tumor" && (
+                      <>
+                        <Typography color="#fff" fontWeight="bold">
+                          Description: No abnormal growth detected.
+                        </Typography>
+                        <Typography color="#fff" fontWeight="bold">
+                          Urgency: None.
+                        </Typography>
+                        <Typography color="#fff" fontWeight="bold">
+                          Danger Level: None.
+                        </Typography>
+                      </>
+                    )}
+                  </Box>
+
+                  {autoPrompt && (
+                    <Box textAlign="center" mt={3}>
+                      <Button
+                        variant="outlined"
+                        onClick={() => setChatOpen(true)}
+                        sx={{ color: "#fff", borderColor: "#fff" }}
+                      >
+                        Want to know more about this tumor?
+                      </Button>
+                    </Box>
+                  )}
                 </Box>
               )}
-            </Box>
+            </>
           )}
         </Container>
       </Box>
 
-      {/* Example Scans Section */}
+      {/* === Example Brain Scans Section === */}
       <Box sx={{ width: "100%", textAlign: "center", mb: 10 }}>
         <Typography
           variant="h5"
@@ -316,7 +346,7 @@ const UploadPage: React.FC = () => {
         </Box>
       </Box>
 
-      {/* ChatBot Component */}
+      {/* ChatBot Modal */}
       {chatOpen && <ChatBot onClose={() => setChatOpen(false)} />}
 
       {/* Floating Chat Icon */}
