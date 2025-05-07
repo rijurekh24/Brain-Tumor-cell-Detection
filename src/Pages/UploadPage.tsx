@@ -199,7 +199,7 @@ const UploadPage: React.FC = () => {
                     Analysis Results
                   </Typography>
                   <Typography sx={{ color: "#fff" }} fontSize={"2rem"}>
-                    {tumorType == "Melignoma" ? "meningioma" : tumorType}
+                    {tumorType == "Melignoma" ? "Meningioma" : tumorType}
                   </Typography>
 
                   <Box
