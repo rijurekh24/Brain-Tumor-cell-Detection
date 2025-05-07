@@ -86,7 +86,7 @@ const ChatBot = ({ onClose }: { onClose: () => void }) => {
       { from: "bot", text: `Here is a link to nearby neurosurgeons:` },
       {
         from: "bot",
-        text: `<a href="${link}" target="_blank" rel="noopener noreferrer">Go to see nearby Neurosurgeons</a>`,
+        text: `<a href="${link}" target="_blank" rel="noopener noreferrer">Go to see nearby Neurosurgeons in ${city}</a>`,
       },
     ]);
     setCity("");
@@ -242,19 +242,20 @@ const ChatBot = ({ onClose }: { onClose: () => void }) => {
         )}
 
         {stage === "askCity" && (
-          <Box display="flex" gap={1} mt={1} px={1}>
+          <Box display="flex" gap={1} mt={2} px={1}>
             <TextField
-              variant="outlined"
+              variant="standard"
               placeholder="Enter your city (e.g., Kolkata, Delhi)"
               value={city}
               onChange={(e) => setCity(e.target.value)}
               onKeyDown={handleKeyDown}
-              fullWidth
+              // fullWidth
               InputProps={{
                 sx: {
-                  borderRadius: "25px",
+                  // borderRadius: "25px",
+                  borderRadius: 1,
                   bgcolor: "#fff",
-                  p: 0,
+                  px: 1,
                   boxShadow: 1,
                   "& .MuiOutlinedInput-notchedOutline": {
                     borderColor: "rgb(66, 36, 41)",
@@ -269,7 +270,14 @@ const ChatBot = ({ onClose }: { onClose: () => void }) => {
                 },
               }}
             />
-            <Button onClick={handleCitySubmit} variant="contained">
+            <Button
+              onClick={handleCitySubmit}
+              variant="contained"
+              sx={{
+                fontSize: "12px",
+                borderRadius: 1,
+              }}
+            >
               Submit
             </Button>
           </Box>
@@ -281,6 +289,9 @@ const ChatBot = ({ onClose }: { onClose: () => void }) => {
               onClick={handleAskLocation}
               variant="contained"
               size="small"
+              sx={{
+                fontSize: "12px",
+              }}
             >
               Ask for Location
             </Button>
@@ -289,6 +300,9 @@ const ChatBot = ({ onClose }: { onClose: () => void }) => {
                 onClick={handleStartFreeChat}
                 variant="outlined"
                 size="small"
+                sx={{
+                  fontSize: "12px",
+                }}
               >
                 Continue Chatting
               </Button>
@@ -312,7 +326,7 @@ const ChatBot = ({ onClose }: { onClose: () => void }) => {
       </Box>
 
       {stage === "chatMode" && (
-        <Box sx={{ display: "flex", alignItems: "center", p: 1 }}>
+        <Box sx={{ display: "flex", alignItems: "center", p: 0 }}>
           <TextField
             variant="outlined"
             placeholder="Type your message..."
@@ -321,11 +335,25 @@ const ChatBot = ({ onClose }: { onClose: () => void }) => {
             onKeyDown={handleKeyDown}
             fullWidth
             size="small"
+            sx={{
+              "& .MuiOutlinedInput-root": {
+                "& fieldset": {
+                  border: "none", // Remove the normal border
+                },
+                "&:hover fieldset": {
+                  border: "none", // Remove hover border
+                },
+                "&.Mui-focused fieldset": {
+                  border: "none",
+                },
+              },
+            }}
           />
+
           <IconButton
             onClick={handleSendMessage}
             color="primary"
-            sx={{ ml: 1 }}
+            sx={{ ml: 0 }}
           >
             <SendIcon />
           </IconButton>
