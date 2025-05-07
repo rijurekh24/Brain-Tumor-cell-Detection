@@ -20,9 +20,11 @@ const ChatBot = ({ onClose }: { onClose: () => void }) => {
   );
   const [input, setInput] = useState("");
   const [stage, setStage] = useState<
-    "init" | "askCity" | "done" | "noResponse"
+    "init" | "askCity" | "done" | "noResponse" | "chatMode"
   >("init");
   const [city, setCity] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [showContinueChat, setShowContinueChat] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -30,19 +32,19 @@ const ChatBot = ({ onClose }: { onClose: () => void }) => {
   }, [messages]);
 
   useEffect(() => {
-    // Initial bot message
     setMessages([
       { from: "bot", text: "Want nearby locations of Neurosurgeons?" },
     ]);
   }, []);
 
   const handleYes = () => {
-    setMessages((prev) => [...prev, { from: "user", text: "Yes" }]);
     setMessages((prev) => [
       ...prev,
+      { from: "user", text: "Yes" },
       { from: "bot", text: "Please enter your city." },
     ]);
     setStage("askCity");
+    setShowContinueChat(false);
   };
 
   const handleNo = () => {
@@ -52,32 +54,83 @@ const ChatBot = ({ onClose }: { onClose: () => void }) => {
       { from: "bot", text: "Okay, let me know if you change your mind." },
     ]);
     setStage("noResponse");
+    setShowContinueChat(true);
+  };
+
+  const handleAskLocation = () => {
+    setMessages((prev) => [
+      ...prev,
+      { from: "bot", text: "Please enter your city." },
+    ]);
+    setStage("askCity");
+    setShowContinueChat(false);
+  };
+
+  const handleStartFreeChat = () => {
+    setStage("chatMode");
+    setMessages((prev) => [
+      ...prev,
+      { from: "bot", text: "You can now ask me anything." },
+    ]);
   };
 
   const handleCitySubmit = () => {
     if (!city.trim()) return;
-    setMessages((prev) => [...prev, { from: "user", text: city }]);
     const link = `https://www.practo.com/search/doctors?results_type=doctor&q=%5B%7B%22word%22%3A%22neurosurgeon%22%2C%22autocompleted%22%3Atrue%2C%22category%22%3A%22subspeciality%22%7D%5D&city=${encodeURIComponent(
       city
     )}`;
+
     setMessages((prev) => [
       ...prev,
+      { from: "user", text: city },
+      { from: "bot", text: `Here is a link to nearby neurosurgeons:` },
       {
         from: "bot",
-        text: `Here is a link to nearby neurosurgeons: `,
-      },
-      {
-        from: "bot",
-        text: `<a href="${link}" target="_blank" rel="noopener noreferrer">Go to see nearby Neurosurgeons </a>`,
+        text: `<a href="${link}" target="_blank" rel="noopener noreferrer">Go to see nearby Neurosurgeons</a>`,
       },
     ]);
+    setCity("");
     setStage("done");
+    setShowContinueChat(true);
   };
 
-  const restartChat = () => {
-    setCity("");
-    setStage("init");
-    setMessages([{ from: "bot", text: "Want nearby locations?" }]);
+  const handleSendMessage = async () => {
+    if (!input.trim()) return;
+    const query = input;
+    setInput("");
+    setMessages((prev) => [...prev, { from: "user", text: query }]);
+    setLoading(true);
+
+    try {
+      const res = await fetch("https://chatbotnew-dd3r.onrender.com/chat", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ query }),
+      });
+      const data = await res.json();
+      setMessages((prev) => [
+        ...prev,
+        {
+          from: "bot",
+          text: data?.response || "Please ask a valid question.",
+        },
+      ]);
+    } catch (err) {
+      setMessages((prev) => [
+        ...prev,
+        { from: "bot", text: "Something went wrong." },
+      ]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      handleSendMessage();
+    }
   };
 
   return (
@@ -96,7 +149,6 @@ const ChatBot = ({ onClose }: { onClose: () => void }) => {
         overflow: "hidden",
       }}
     >
-      {/* Header */}
       <Box
         sx={{
           bgcolor: "rgb(66, 36, 41)",
@@ -116,15 +168,7 @@ const ChatBot = ({ onClose }: { onClose: () => void }) => {
         </IconButton>
       </Box>
 
-      {/* Chat Area */}
-      <Box
-        sx={{
-          flexGrow: 1,
-          p: 2,
-          bgcolor: "#fafafa",
-          overflowY: "auto",
-        }}
-      >
+      <Box sx={{ flexGrow: 1, p: 2, bgcolor: "#fafafa", overflowY: "auto" }}>
         {messages.map((msg, i) => (
           <Box
             key={i}
@@ -164,7 +208,6 @@ const ChatBot = ({ onClose }: { onClose: () => void }) => {
                 <Typography variant="body2">{msg.text}</Typography>
               </Box>
             )}
-
             {msg.from === "user" && (
               <Avatar sx={{ bgcolor: "#a5d6a7", ml: 1, width: 30, height: 30 }}>
                 <PersonIcon fontSize="small" />
@@ -173,7 +216,20 @@ const ChatBot = ({ onClose }: { onClose: () => void }) => {
           </Box>
         ))}
 
-        {/* Buttons */}
+        {loading && (
+          <Box display="flex" alignItems="center" gap={1} mb={1}>
+            <Avatar sx={{ bgcolor: "#90caf9", width: 30, height: 30 }}>
+              <SmartToyIcon fontSize="small" />
+            </Avatar>
+            <Typography
+              variant="body2"
+              sx={{ bgcolor: "#e3f2fd", borderRadius: 2, px: 2, py: 1 }}
+            >
+              Typing...
+            </Typography>
+          </Box>
+        )}
+
         {stage === "init" && (
           <Box display="flex" justifyContent="center" gap={2} mt={1}>
             <Button onClick={handleYes} variant="contained" size="small">
@@ -192,6 +248,7 @@ const ChatBot = ({ onClose }: { onClose: () => void }) => {
               placeholder="Enter your city (e.g., Kolkata, Delhi)"
               value={city}
               onChange={(e) => setCity(e.target.value)}
+              onKeyDown={handleKeyDown}
               fullWidth
               InputProps={{
                 sx: {
@@ -212,7 +269,6 @@ const ChatBot = ({ onClose }: { onClose: () => void }) => {
                 },
               }}
             />
-
             <Button onClick={handleCitySubmit} variant="contained">
               Submit
             </Button>
@@ -220,20 +276,61 @@ const ChatBot = ({ onClose }: { onClose: () => void }) => {
         )}
 
         {stage === "noResponse" && (
-          <Box display="flex" justifyContent="center" mt={2}>
+          <Box display="flex" justifyContent="center" gap={2} mt={2}>
             <Button
-              onClick={restartChat}
+              onClick={handleAskLocation}
               variant="contained"
-              color="primary"
               size="small"
             >
-              Start Chat Again
+              Ask for Location
+            </Button>
+            {showContinueChat && (
+              <Button
+                onClick={handleStartFreeChat}
+                variant="outlined"
+                size="small"
+              >
+                Continue Chatting
+              </Button>
+            )}
+          </Box>
+        )}
+
+        {showContinueChat && stage === "done" && (
+          <Box display="flex" justifyContent="center" mt={2}>
+            <Button
+              onClick={handleStartFreeChat}
+              variant="contained"
+              size="small"
+            >
+              Continue Chatting
             </Button>
           </Box>
         )}
 
         <div ref={bottomRef} />
       </Box>
+
+      {stage === "chatMode" && (
+        <Box sx={{ display: "flex", alignItems: "center", p: 1 }}>
+          <TextField
+            variant="outlined"
+            placeholder="Type your message..."
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            onKeyDown={handleKeyDown}
+            fullWidth
+            size="small"
+          />
+          <IconButton
+            onClick={handleSendMessage}
+            color="primary"
+            sx={{ ml: 1 }}
+          >
+            <SendIcon />
+          </IconButton>
+        </Box>
+      )}
 
       <Divider />
     </Paper>

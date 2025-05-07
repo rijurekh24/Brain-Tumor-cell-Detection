@@ -147,6 +147,10 @@ const HomePage: React.FC = () => {
                 { icon: <CloudUpload />, text: "Upload your brain MRI scan" },
                 { icon: <Psychology />, text: "Our AI analyzes the image" },
                 {
+                  icon: <Speed />,
+                  text: "Segmentation and classification of tumor types",
+                },
+                {
                   icon: <Assessment />,
                   text: "Receive detailed results and insights",
                 },
