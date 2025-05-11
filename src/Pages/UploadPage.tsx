@@ -13,7 +13,7 @@ import {
 import { CloudUpload } from "@mui/icons-material";
 import ChatIcon from "@mui/icons-material/Chat";
 import axios from "axios";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 
 import ChatBot from "./ChatBot";
 
@@ -25,7 +25,7 @@ const UploadPage: React.FC = () => {
 
   const [chatOpen, setChatOpen] = useState(false);
   const [autoPrompt, setAutoPrompt] = useState(false);
- const navigate = useNavigate();
+  const navigate = useNavigate();
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
@@ -37,7 +37,7 @@ const UploadPage: React.FC = () => {
   };
 
   const handleRedirect = () => {
-    navigate('/segmentation-image'); 
+    navigate("/segmentation-image");
   };
 
   const handleSubmit = async (event: React.FormEvent) => {
@@ -282,14 +282,31 @@ const UploadPage: React.FC = () => {
                   </Box>
 
                   <Box textAlign="center" mt={3}>
-                      <Button
-                        variant="outlined"
-                        onClick ={handleRedirect}
-                        sx={{ color: "#000", bgcolor: "#fff" ,borderColor: "#fff"}}
-                      >
-                        Want to see Image Segmentation?
-                      </Button>
-                    </Box>
+                    <Button
+                      variant="contained"
+                      onClick={handleRedirect}
+                      sx={{
+                        color: "#fff",
+                        bgcolor: "rgb(87, 28, 35)", // deep maroon-red
+                        borderRadius: "10px",
+                        fontWeight: "bold",
+                        padding: "12px 24px",
+                        textTransform: "none",
+                        fontSize: "16px",
+                        boxShadow:
+                          "0 0 10px #555, 0 0 20px #555, 0 0 30px #555", // brownish-black glow
+                        transition: "all 0.3s ease-in-out",
+                        "&:hover": {
+                          boxShadow:
+                            "0 0 20px #666, 0 0 40px #666, 0 0 60px #666",
+                          transform: "scale(1.07)",
+                          bgcolor: "rgb(87, 28, 35)", // richer maroon on hover
+                        },
+                      }}
+                    >
+                      WANT TO SEE IMAGE SEGMENTATION?
+                    </Button>
+                  </Box>
 
                   {autoPrompt && (
                     <Box textAlign="center" mt={3}>
