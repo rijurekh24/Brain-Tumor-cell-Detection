@@ -14,6 +14,7 @@ import { createTheme, CssBaseline, ThemeProvider } from "@mui/material";
 import Header from "./Components/Header";
 import Footer from "./Components/Footer";
 import ProtectedRoute from "./Components/ProtectedRoute";
+import SegmentationUpload from "./Pages/SegmanationUpload";
 
 const theme = createTheme({
   palette: {
@@ -68,6 +69,14 @@ function App() {
                 element={
                   <ProtectedRoute>
                     <UploadPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/segmentation-image"
+                element={
+                  <ProtectedRoute>
+                    <SegmentationUpload />
                   </ProtectedRoute>
                 }
               />

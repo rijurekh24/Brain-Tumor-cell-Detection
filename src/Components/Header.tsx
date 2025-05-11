@@ -134,6 +134,23 @@ const Header: React.FC = () => {
             >
               Upload Scan
             </Button>
+            <Button
+              color="inherit"
+              component={RouterLink}
+              to="/segmentation-image"
+              sx={{
+                color: "white",
+                fontWeight: "bold",
+                textTransform: "capitalize",
+                fontSize: "16px",
+                mx: 1,
+                "&:hover": {
+                  backgroundColor: "rgba(255, 255, 255, 0.2)",
+                },
+              }}
+            >
+              Check Segmentation
+            </Button>
 
             {isAuthenticated && user ? (
               <Box display="flex" alignItems="center">

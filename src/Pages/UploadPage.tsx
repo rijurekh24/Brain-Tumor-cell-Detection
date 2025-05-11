@@ -13,6 +13,8 @@ import {
 import { CloudUpload } from "@mui/icons-material";
 import ChatIcon from "@mui/icons-material/Chat";
 import axios from "axios";
+import { useNavigate } from 'react-router-dom';
+
 import ChatBot from "./ChatBot";
 
 const UploadPage: React.FC = () => {
@@ -23,7 +25,7 @@ const UploadPage: React.FC = () => {
 
   const [chatOpen, setChatOpen] = useState(false);
   const [autoPrompt, setAutoPrompt] = useState(false);
-
+ const navigate = useNavigate();
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
@@ -32,6 +34,10 @@ const UploadPage: React.FC = () => {
       setResults(null);
       setAutoPrompt(false);
     }
+  };
+
+  const handleRedirect = () => {
+    navigate('/segmentation-image'); 
   };
 
   const handleSubmit = async (event: React.FormEvent) => {
@@ -53,6 +59,7 @@ const UploadPage: React.FC = () => {
         }
       );
       setResults(response.data);
+      console.log(response.data);
 
       const tumorType = response.data["tumor type"]?.tumor_prediction;
       const classification = response.data["tumor type"]?.classification;
@@ -273,6 +280,16 @@ const UploadPage: React.FC = () => {
                       </>
                     )}
                   </Box>
+
+                  <Box textAlign="center" mt={3}>
+                      <Button
+                        variant="outlined"
+                        onClick ={handleRedirect}
+                        sx={{ color: "#000", bgcolor: "#fff" ,borderColor: "#fff"}}
+                      >
+                        Want to see Image Segmentation?
+                      </Button>
+                    </Box>
 
                   {autoPrompt && (
                     <Box textAlign="center" mt={3}>
