@@ -180,6 +180,7 @@ const ChatBot = ({ onClose }: { onClose: () => void }) => {
       "do",
       "get",
       "getting",
+      "image",
       "information",
       "nutrition",
       "histology",
