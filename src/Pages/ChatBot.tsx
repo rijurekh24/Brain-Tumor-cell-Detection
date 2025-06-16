@@ -170,6 +170,7 @@ const ChatBot = ({ onClose }: { onClose: () => void }) => {
       "medicine",
       "medicines",
       "coma",
+      "xray",
       "spinal",
       "cord",
       "topic",
