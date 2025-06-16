@@ -59,14 +59,14 @@ const SegmentationUpload: React.FC = () => {
       const tumorType = response.data["tumor type"]?.tumor_prediction;
       const classification = response.data["tumor type"]?.classification;
       const segmentation_img = response.data["tumor type"]?.segmentation_image;
+      setAutoPrompt(true);
 
-      if (
-        tumorType &&
-        tumorType !== "No Tumor" &&
-        classification !== "non_brain"
-      ) {
-        setAutoPrompt(true);
-      }
+      // if (
+      //   tumorType &&
+      //   tumorType !== "No Tumor" &&
+      //   classification !== "non_brain"
+      // ) {
+      // }
     } catch (error) {
       console.error("Error during prediction:", error);
     } finally {
