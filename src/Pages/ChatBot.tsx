@@ -160,6 +160,7 @@ const ChatBot = ({ onClose }: { onClose: () => void }) => {
       "metastatic tumor",
       "ct",
       "pet",
+      "ok",
       "segmentation",
       "neuroimaging",
       "imaging",
