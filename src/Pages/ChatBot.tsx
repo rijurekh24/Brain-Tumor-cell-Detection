@@ -163,6 +163,8 @@ const ChatBot = ({ onClose }: { onClose: () => void }) => {
       "ok",
       "segmentation",
       "neuroimaging",
+      "to",
+      "too",
       "imaging",
       "scan",
       "contrast enhancement",
