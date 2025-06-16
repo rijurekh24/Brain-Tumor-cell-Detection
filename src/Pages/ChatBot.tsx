@@ -117,6 +117,7 @@ const ChatBot = ({ onClose }: { onClose: () => void }) => {
       "brain",
       "mortality",
       "risk",
+      "related",
       "symptoms",
       "brain tumor",
       "glioblastoma",
