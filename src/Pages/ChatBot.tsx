@@ -186,6 +186,7 @@ const ChatBot = ({ onClose }: { onClose: () => void }) => {
       "don't",
       "does",
       "do",
+      "assist",
       "get",
       "getting",
       "image",
