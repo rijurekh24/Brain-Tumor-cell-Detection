@@ -167,6 +167,7 @@ const ChatBot = ({ onClose }: { onClose: () => void }) => {
       "histology",
       "pathology",
       "thank you",
+      "area",
       "thanks",
       "u",
       "anything",
