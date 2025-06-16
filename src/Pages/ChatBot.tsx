@@ -129,6 +129,7 @@ const ChatBot = ({ onClose }: { onClose: () => void }) => {
       "biopsy",
       "doctor",
       "neurosurgeon",
+      "for",
       "neurosurgery",
       "neurosurgeons",
       "grading",
