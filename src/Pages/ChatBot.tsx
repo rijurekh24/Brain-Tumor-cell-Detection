@@ -127,6 +127,8 @@ const ChatBot = ({ onClose }: { onClose: () => void }) => {
       "noncancerous",
       "no",
       "not",
+      "measure",
+      "measures",
       "braintumor",
       "radiation",
       "tumor",
